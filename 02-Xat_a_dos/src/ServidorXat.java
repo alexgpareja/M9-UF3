@@ -17,7 +17,7 @@ public class ServidorXat {
     public void iniciarServidor() {
         try {
             serverSocket = new ServerSocket(PORT);
-            System.out.println("Servidor iniciat en el port: " + PORT);
+            System.out.println("Servidor iniciat a: " + HOST + " " + PORT);
         } catch (IOException e) {
             System.err.println("Error al iniciar el servidor: " + e.getMessage());
         }

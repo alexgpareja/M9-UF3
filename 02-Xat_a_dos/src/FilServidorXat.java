@@ -1,41 +1,35 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.net.Socket;
+import java.io.*;
 
-public class FilServidorXat extends Thread {
-    
-    private Socket clientSocket;
-    private ObjectInputStream inputStream;
+class FilServidorXat extends Thread {
 
-    public FilServidorXat(Socket clientSocket) {
-        this.clientSocket = clientSocket;
-        try {
-            this.inputStream = new ObjectInputStream(clientSocket.getInputStream());
-        } catch (Exception e) {
-            System.err.println("Error al crear el ObjectInputStream: " + e.getMessage());
-        }
+    private ObjectInputStream inputStream; // Stream d'entrada per rebre missatges del client
+
+    // Constructor que rep un ObjectInputStream
+    public FilServidorXat(ObjectInputStream inputStream) {
+        this.inputStream = inputStream;
     }
 
     @Override
     public void run() {
         try {
-            // Recibe mensajes del cliente hasta que reciba MSG_SORTIR
+            // Rep missatges del client fins a rebre MSG_SORTIR
             String message;
             while ((message = (String) inputStream.readObject()) != null) {
-                System.out.println("Mensaje del cliente: " + message);
+                System.out.println("Missatge del client: " + message);
                 if (message.equalsIgnoreCase(ServidorXat.MSG_SORTIR)) {
-                    break; // Sale del bucle si el cliente envía "sortir"
+                    break;
                 }
             }
 
         } catch (ClassNotFoundException | IOException e) {
-            System.err.println("Error en la recepción de mensajes: " + e.getMessage());
+            System.err.println("Error al rebre el missatge del client: " + e.getMessage());
         } finally {
             try {
-                // Cierra la conexión con el cliente
-                clientSocket.close();
+                if (inputStream != null) {
+                    inputStream.close();
+                }
             } catch (IOException e) {
-                System.err.println("Error al cerrar la conexión: " + e.getMessage());
+                System.err.println("Error al tancar el stream d'entrada: ".concat(e.getMessage()));
             }
         }
     }

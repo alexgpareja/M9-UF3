@@ -7,6 +7,15 @@ public class Servidor {
     // Constants
     private static final int PORT = 9999;
     private static final String HOST = "localhost";
+    
+    public static int getPort() {
+        return PORT;
+    }
+
+    public static String getHost() {
+        return HOST;
+    }
+
     ServerSocket serverSocket;
 
     public Socket connectar() throws IOException {
